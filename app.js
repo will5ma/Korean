@@ -91,16 +91,31 @@ questions.forEach((item, index) => {
   item.type = typeFour[item.type];
 });
 const bilingual = (ru, ko) => `<span class="ru-line">${ru}</span><span class="ko-line">${ko}</span>`;
+const quizItems = questions.map((item, index) => ({ ...item, ko: korean[index] }));
+
+function shuffle(items) {
+  const shuffled = [...items];
+  for (let index = shuffled.length - 1; index > 0; index--) {
+    const randomIndex = Math.floor(Math.random() * (index + 1));
+    [shuffled[index], shuffled[randomIndex]] = [shuffled[randomIndex], shuffled[index]];
+  }
+  return shuffled;
+}
+
+function shuffledRounds() {
+  return [0, 1, 2].flatMap(round => shuffle(quizItems.slice(round * 10, round * 10 + 10)));
+}
 
 let current = 0;
 let score = 0;
 let answered = false;
+let gameQuestions = [];
 const $ = (id) => document.getElementById(id);
 const welcome = $('welcome-screen'), quiz = $('quiz-screen'), result = $('result-screen');
 
 function roundFor(index) { return Math.floor(index / 10); }
 function renderQuestion() {
-  const item = questions[current];
+  const item = gameQuestions[current];
   const r = roundFor(current);
   $('round-label').innerHTML = bilingual(`РАУНД ${r + 1}`, `${r + 1}라운드`);
   $('round-title').innerHTML = bilingual(rounds[r].title, roundKorean[r]);
@@ -108,7 +123,7 @@ function renderQuestion() {
   $('progress-bar').style.width = `${((current + 1) / questions.length) * 100}%`;
   $('score-value').textContent = score;
   $('type-tag').innerHTML = bilingual(item.type, typeKorean[item.type]);
-  $('question-text').innerHTML = bilingual(item.q, korean[current][0]);
+  $('question-text').innerHTML = bilingual(item.q, item.ko[0]);
   const hintRu = current % 10 === 0 ? rounds[r].cheer : item.activity ? 'Попробуй выполнить задание, а потом выбери ответ!' : 'Выбери один ответ. Ошибаться можно — мы учимся играя!';
   const hintKo = current % 10 === 0 ? '걱정하지 마세요. 탈락은 없어요! 모든 답은 새로운 발견이에요.' : item.activity ? '활동을 해 본 다음, 답을 골라 보세요!' : '답 하나를 골라 보세요. 틀려도 괜찮아요. 놀이하며 배워요!';
   $('question-hint').innerHTML = bilingual(hintRu, hintKo);
@@ -123,7 +138,7 @@ function renderQuestion() {
   item.options.forEach((option, index) => {
     const button = document.createElement('button');
     button.className = 'answer-btn';
-    button.innerHTML = `<span class="option-letter">${String.fromCharCode(65 + index)}</span><span>${bilingual(option, korean[current][1][index])}</span>`;
+    button.innerHTML = `<span class="option-letter">${String.fromCharCode(65 + index)}</span><span>${bilingual(option, item.ko[1][index])}</span>`;
     button.addEventListener('click', () => chooseAnswer(index));
     options.appendChild(button);
   });
@@ -135,7 +150,7 @@ function renderQuestion() {
 function chooseAnswer(choice) {
   if (answered) return;
   answered = true;
-  const item = questions[current];
+  const item = gameQuestions[current];
   const buttons = [...document.querySelectorAll('.answer-btn')];
   buttons.forEach(button => button.disabled = true);
   const correct = choice === item.answer;
@@ -144,13 +159,13 @@ function chooseAnswer(choice) {
   $('score-value').textContent = score;
   $('feedback-icon').textContent = correct ? '✦' : '♥';
   $('feedback-title').innerHTML = bilingual(correct ? 'Отлично!' : 'Хорошая попытка!', correct ? '아주 잘했어요!' : '좋은 시도예요!');
-  $('feedback-text').innerHTML = bilingual(item.exp, korean[current][2]);
+  $('feedback-text').innerHTML = bilingual(item.exp, item.ko[2]);
   $('feedback').classList.remove('hidden');
   $('next-btn').innerHTML = current === questions.length - 1 ? bilingual('Увидеть результат ✦', '결과 보기 ✦') : current % 10 === 9 ? bilingual('Следующий раунд →', '다음 라운드 →') : bilingual('Дальше →', '다음 →');
   $('next-btn').classList.remove('hidden');
 }
 
-function startGame() { current = 0; score = 0; welcome.classList.add('hidden'); result.classList.add('hidden'); quiz.classList.remove('hidden'); renderQuestion(); window.scrollTo({top:0, behavior:'smooth'}); }
+function startGame() { current = 0; score = 0; gameQuestions = shuffledRounds(); welcome.classList.add('hidden'); result.classList.add('hidden'); quiz.classList.remove('hidden'); renderQuestion(); window.scrollTo({top:0, behavior:'smooth'}); }
 function nextQuestion() { if (current === questions.length - 1) { quiz.classList.add('hidden'); result.classList.remove('hidden'); $('final-score').textContent = score; window.scrollTo({top:0, behavior:'smooth'}); return; } current++; renderQuestion(); }
 $('start-btn').addEventListener('click', startGame);
 $('restart-btn').addEventListener('click', startGame);
