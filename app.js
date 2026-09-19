@@ -104,6 +104,20 @@ function shuffle(items) {
 
 function shuffledRounds() { return shuffle(quizItems); }
 
+function randomizeChoices(item) {
+  const choices = shuffle(item.options.map((option, index) => ({
+    option,
+    korean: item.ko[1][index],
+    correct: index === item.answer
+  })));
+  return {
+    ...item,
+    options: choices.map(choice => choice.option),
+    ko: [item.ko[0], choices.map(choice => choice.korean), item.ko[2]],
+    answer: choices.findIndex(choice => choice.correct)
+  };
+}
+
 let current = 0;
 let score = 0;
 let answered = false;
@@ -163,7 +177,7 @@ function chooseAnswer(choice) {
   $('next-btn').classList.remove('hidden');
 }
 
-function startGame() { current = 0; score = 0; gameQuestions = shuffledRounds(); welcome.classList.add('hidden'); result.classList.add('hidden'); quiz.classList.remove('hidden'); renderQuestion(); window.scrollTo({top:0, behavior:'smooth'}); }
+function startGame() { current = 0; score = 0; gameQuestions = shuffledRounds().map(randomizeChoices); welcome.classList.add('hidden'); result.classList.add('hidden'); quiz.classList.remove('hidden'); renderQuestion(); window.scrollTo({top:0, behavior:'smooth'}); }
 function nextQuestion() { if (current === questions.length - 1) { quiz.classList.add('hidden'); result.classList.remove('hidden'); $('final-score').textContent = score; window.scrollTo({top:0, behavior:'smooth'}); return; } current++; renderQuestion(); }
 $('start-btn').addEventListener('click', startGame);
 $('restart-btn').addEventListener('click', startGame);
