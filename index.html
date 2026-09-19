@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#0757dd" />
+    <title>Чхусок: большая игра</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&amp;family=Nunito:wght@500;600;700;800;900&amp;display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="sky-decor decor-star star-one">✦</div>
+    <div class="sky-decor decor-star star-two">✦</div>
+    <div class="sky-decor ribbon ribbon-one"></div>
+    <div class="sky-decor ribbon ribbon-two"></div>
+
+    <main class="app-shell">
+      <section id="welcome-screen" class="screen welcome-screen">
+        <div class="topline"><span>한국 문화 · игра для друзей</span><span class="sound-pill">🔊 Русский · 한국어</span></div>
+        <div class="welcome-copy">
+          <p class="eyebrow">ОСЕННЯЯ ИГРА <small>· 가을 놀이</small></p>
+          <h1>Праздник <span>Чхусок</span><br />в твоих руках!<small>추석 축제를 함께 알아봐요!</small></h1>
+          <p class="lead">Смотри, выбирай, двигайся и узнавай о корейском осеннем празднике вместе с друзьями.<br /><span>친구들과 보고, 고르고, 움직이며 한국의 가을 명절을 알아봐요.</span></p>
+          <div class="term-row" aria-label="Ключевые слова">
+            <span><b>추석</b> Чхусок</span>
+            <span><b>송편</b> Сонпхён</span>
+            <span><b>보름달</b> Полная луна</span>
+            <span><b>한복</b> Ханбок</span>
+          </div>
+          <button class="primary-btn begin-btn" id="start-btn"><span class="button-copy">Начать игру<small>게임 시작</small></span><span>→</span></button>
+          <p class="tiny-note">30 коротких заданий · можно играть одному или командой<br /><span>30개의 짧은 문제 · 혼자 또는 팀으로 할 수 있어요</span></p>
+        </div>
+        <div class="deck-stage" aria-hidden="true">
+          <div class="moon-glow"></div>
+          <article class="hero-card card-fall"><span class="card-icon">🍂</span><strong>Осень</strong><small>가을</small></article>
+          <article class="hero-card card-moon"><span class="card-icon">🌕</span><strong>Луна</strong><small>보름달</small></article>
+          <article class="hero-card card-food"><span class="card-icon">🥟</span><strong>Сонпхён</strong><small>송편</small></article>
+          <article class="hero-card card-hanbok"><span class="card-icon">👘</span><strong>Ханбок</strong><small>한복</small></article>
+          <span class="confetti confetti-a"></span><span class="confetti confetti-b"></span><span class="confetti confetti-c"></span>
+        </div>
+      </section>
+
+      <section id="quiz-screen" class="screen quiz-screen hidden" aria-live="polite">
+        <header class="quiz-header">
+          <button class="home-btn" id="home-btn" aria-label="Вернуться в начало">✦</button>
+          <div class="round-status">
+            <span id="round-label">РАУНД 1<br />1라운드</span>
+            <strong id="round-title">Знакомимся с Чхусоком<br />추석과 친해지기</strong>
+          </div>
+          <div class="score-badge"><span>Найдено звёзд<br />찾은 별</span><b id="score-value">0</b> ✦</div>
+        </header>
+        <div class="progress-wrap" aria-label="Прогресс игры"><div class="progress-bar" id="progress-bar"></div></div>
+        <div class="question-count"><span id="question-number">01</span><span>/ 30</span></div>
+        <div class="quiz-layout">
+          <div class="visual-card" id="visual-card"><div class="visual-orb"></div><div id="visual-emoji">🌕</div><div id="visual-subject" aria-hidden="true"></div></div>
+          <section class="question-panel">
+            <p id="type-tag" class="type-tag">ВЫБЕРИ КАРТИНКУ<br />그림을 골라요</p>
+            <h2 id="question-text">Какой круглый гость часто светит в Чхусок?<span class="ko-line">추석에 자주 보이는 둥근 손님은 무엇일까요?</span></h2>
+            <p id="question-hint" class="question-hint">Выбери один ответ. Ошибаться можно — мы учимся играя!<span class="ko-line">답 하나를 골라 보세요. 틀려도 괜찮아요. 놀이하며 배워요!</span></p>
+            <div id="answer-options" class="answer-options"></div>
+            <div id="feedback" class="feedback hidden">
+              <div id="feedback-icon">✦</div>
+              <div><strong id="feedback-title">Отлично!</strong><p id="feedback-text"></p></div>
+            </div>
+            <button id="next-btn" class="next-btn hidden">Дальше <span>→</span></button>
+          </section>
+        </div>
+      </section>
+
+      <section id="result-screen" class="screen result-screen hidden">
+        <div class="result-moon">🌕</div>
+        <p class="eyebrow">ИГРА ОКОНЧЕНА <small>· 게임 끝!</small></p>
+        <h2>Ты — исследователь<br /><span>Чхусока!</span><small>당신은 추석 탐험가예요!</small></h2>
+        <p class="result-copy">Ты открыл(а) много осенних историй: про луну, семью, вкусную еду и красивые игры.<br /><span>달, 가족, 맛있는 음식과 신나는 놀이를 많이 알아보았어요.</span></p>
+        <div class="result-score"><span>Твои звёзды<br />나의 별</span><b id="final-score">0</b><i>из 30<br />30개 중</i></div>
+        <div class="memory-card"><span>💬</span><p>Какое слово ты запомнил(а) сегодня?<br />오늘 어떤 단어가 기억에 남나요?</p><div class="memory-words"><b>추석</b><b>송편</b><b>보름달</b><b>한복</b></div></div>
+        <button class="primary-btn" id="restart-btn"><span class="button-copy">Играть ещё раз<small>다시 하기</small></span><span>↻</span></button>
+      </section>
+    </main>
+    <script src="app.js"></script>
+  </body>
+</html>
